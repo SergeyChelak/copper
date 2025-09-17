@@ -27,8 +27,7 @@ pub enum Color {
     White = 15,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(transparent)]
+#[derive(Debug, Clone, Copy)]
 struct ColorCode(u8);
 
 impl Default for ColorCode {
@@ -43,7 +42,7 @@ impl ColorCode {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy)]
 #[repr(C)]
 struct ScreenChar {
     ascii_character: u8,
