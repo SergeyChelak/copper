@@ -15,6 +15,10 @@ pub mod vga_buffer;
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    unsafe {
+        interrupts::PICS.lock().initialize();
+    }
+    x86_64::instructions::interrupts::enable();
 }
 
 pub trait Testable {
@@ -78,11 +82,6 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 //
 pub fn halt_loop() -> ! {
     loop {
-        unsafe {
-            core::arch::asm! {
-                "cli",
-                "hlt"
-            }
-        }
+        x86_64::instructions::hlt();
     }
 }
