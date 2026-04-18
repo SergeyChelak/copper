@@ -3,19 +3,27 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11"; # Use a stable Nixpkgs channel
-    flake-utils.url = "github.com/numtide/flake-utils";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable"; # For newer packages like gemini-cli
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
     {
       nixpkgs,
+      nixpkgs-unstable,
+      rust-overlay,
       flake-utils,
       ...
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        overlays = [ rust-overlay.overlays.default ];
+        pkgs = import nixpkgs {
+          inherit system overlays;
+        };
+        pkgsUnstable = import nixpkgs-unstable { inherit system; };
 
         # Specify a recent stable Rust toolchain
         rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
@@ -31,9 +39,10 @@
             llvm # Often useful for Rust tooling and introspection
             clang # Required by some Rust crates/tools
             gdb # For debugging the kernel
-            grub # For creating bootable images (e.g., GRUB multiboot)
+            grub2 # For creating bootable images (e.g., GRUB multiboot)
             xorriso # For creating ISO images
             cargo-bootimage # From original shell.nix
+            pkgsUnstable.gemini-cli # Added gemini-cli from unstable nixpkgs
           ];
 
           # Set environment variables for cargo and rustc
