@@ -1,5 +1,3 @@
-use core::ops::Deref;
-
 use bootloader::bootinfo::{MemoryMap, MemoryRegionType};
 use x86_64::{
     PhysAddr, VirtAddr,

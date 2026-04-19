@@ -11,11 +11,13 @@ use core::panic::PanicInfo;
 use bootloader::BootInfo;
 use bootloader::entry_point;
 
+pub mod allocator;
 pub mod gdt;
 pub mod interrupts;
 pub mod memory;
 pub mod serial;
 pub mod vga_buffer;
+extern crate alloc;
 
 pub fn init() {
     gdt::init();
