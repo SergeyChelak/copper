@@ -9,6 +9,7 @@ use core::panic::PanicInfo;
 
 #[cfg(test)]
 use bootloader::BootInfo;
+#[cfg(test)]
 use bootloader::entry_point;
 
 pub mod allocator;
